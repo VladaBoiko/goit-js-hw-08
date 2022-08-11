@@ -1,6 +1,5 @@
 import throttle from 'lodash.throttle';
-const NAME_KEY = 'name';
-const MESSAGE_KEY = 'msg';
+const FORM_KEY = 'feedback-form-state';
 const form = document.querySelector('.feedback-form');
 const inputName = document.querySelector('.feedback-form input');
 const textareaMessage = document.querySelector('.feedback-form textarea');
@@ -8,39 +7,41 @@ const textareaMessage = document.querySelector('.feedback-form textarea');
 addSavedData();
 
 form.addEventListener('submit', throttle(onFormSubmit, 500));
-inputName.addEventListener('input', throttle(onNameInput, 500));
-textareaMessage.addEventListener('input', throttle(onMessageInput, 500));
+inputName.addEventListener('input', throttle(onInput, 500));
+textareaMessage.addEventListener('input', throttle(onInput, 500));
 
 function onFormSubmit(event) {
   event.preventDefault();
-  const currentData = {
-    name: localStorage.getItem(NAME_KEY),
-    message: localStorage.getItem(MESSAGE_KEY),
-  };
-  console.log(currentData);
+  const currentData = localStorage.getItem(FORM_KEY);
+  const parsedData = JSON.parse(currentData);
+  console.log('Зараз буде некрасиво, але по умові завдання)))');
+  console.log(parsedData);
+  console.log('А зараз буде красиво)');
+  console.log(`User e-mail: ${parsedData.name}`);
+  console.log(`User comment: ${parsedData.message}`);
   event.target.reset();
-  localStorage.removeItem(NAME_KEY);
-  localStorage.removeItem(MESSAGE_KEY);
+  localStorage.removeItem(FORM_KEY);
 }
-function onNameInput(event) {
-  const name = event.target.value;
-  localStorage.setItem(NAME_KEY, name);
-  console.log(name);
-}
-function onMessageInput(event) {
-  const message = event.target.value;
-  localStorage.setItem(MESSAGE_KEY, message);
-  console.log(message);
-}
-function addSavedData() {
-  const savedMessage = localStorage.getItem(MESSAGE_KEY);
-  const savedName = localStorage.getItem(NAME_KEY);
+function onInput() {
+  const data = {
+    name: inputName.value,
+    message: textareaMessage.value,
+  };
 
-  if (savedMessage) {
-    textareaMessage.value = savedMessage;
+  localStorage.setItem(FORM_KEY, JSON.stringify(data));
+  console.log(data);
+}
+
+function addSavedData() {
+  const savedText = localStorage.getItem(FORM_KEY);
+  const parsedText = JSON.parse(savedText);
+  console.log(parsedText);
+
+  if (parsedText) {
+    inputName.value = parsedText.name;
   }
 
-  if (savedName) {
-    inputName.value = savedName;
+  if (parsedText) {
+    textareaMessage.value = parsedText.message;
   }
 }
