@@ -14,11 +14,13 @@ function onFormSubmit(event) {
   event.preventDefault();
   const currentData = localStorage.getItem(FORM_KEY);
   const parsedData = JSON.parse(currentData);
+
   console.log('Зараз буде некрасиво, але по умові завдання)))');
   console.log(parsedData);
   console.log('А зараз буде красиво)');
   console.log(`User e-mail: ${parsedData.name}`);
   console.log(`User comment: ${parsedData.message}`);
+
   event.target.reset();
   localStorage.removeItem(FORM_KEY);
 }
